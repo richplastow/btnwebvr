@@ -1,4 +1,30 @@
 html {
-  background: #888;
+  position: absolute!important;
+  height: 200%!important;
+  bottom: auto!important;
+  background: #000;
   font-family: Arial, sans-serif;
+  color: #bbb;
+}
+body {
+  overflow-y: scroll!important;
+}
+a-scene {
+  position: fixed!important;
+}
+hr {
+  border-width: 0;
+  border-top: 2px solid #f60;
+}
+a, a:visited {
+  color: #f60;
+  transition: color 0.3s;
+}
+a:hover {
+  color: #fa0;
+}
+
+.bwv-header {
+  position: absolute;
+  z-index: 999;
 }
