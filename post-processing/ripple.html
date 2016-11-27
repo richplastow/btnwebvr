@@ -2,11 +2,11 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>BtnWebVR / Post-Processing / Tint</title>
+    <title>BtnWebVR / Post-Processing / Ripple</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="keywords" content="VR, WebVR, GLSL, WebGL, Shaders, RGB, Tint">
+    <meta name="keywords" content="VR, WebVR, GLSL, WebGL, Shaders, Ripple">
     <meta name="description"
-      content="Example of a tint post-processing effect in WebVR">
+      content="Example of a ripple post-processing effect in WebVR">
 
     <link rel="stylesheet" href="../css/btnwebvr.css">
 
@@ -31,14 +31,14 @@
     <!-- The 'upper-lower-control' A-Frame component provides mouseenter and -->
     <!-- mouseleave listeners for control-columns. It modifies the control   -->
     <!-- heights, and applies the value to a post-processing effect.         -->
-    <!-- See `#tint-lightness-upper` etc, below.                             -->
+    <!-- See `#ripple-amplitude-upper` etc, below.                           -->
     <script src="js/upper-lower-control.js"></script>
 
     <!-- Specific post-processing scripts, just for this example’s effects.  -->
-    <!-- These define `THREE.ChannelBoostShader` and the 'tint' A-Frame      -->
+    <!-- These define `THREE.RippleShader` and the 'ripple' A-Frame          -->
     <!-- component.                                                          -->
-    <script src="js/rgb-shaders/ChannelBoostShader.js"></script>
-    <script src="js/rgb-components/tint.js"></script>
+    <script src="js/shadertoy-shaders/RippleShader.js"></script>
+    <script src="js/shadertoy-components/ripple.js"></script>
 
   </head>
 
@@ -46,15 +46,15 @@
     <div class="bwv-header">
       <h1><a href="../index.html">BtnWebVR</a> /
           <a href="../post-processing.html">Post-Processing</a> /
-          Tint
+          Ripple
       </h1>
-      <h2>Example of a tint Post-Processing effect in WebVR</h2>
+      <h2>Example of a ripple Post-Processing effect in WebVR</h2>
     </div>
 
     <a-scene
        post-processing="true"
-       compositor="tint fxaa"
-       tint="hue:180; saturation:1.0; lightness:1.0"
+       compositor="ripple fxaa"
+       ripple="wavelength:1000; amplitude:0.5"
        fog="type:linear; color:#222; near:1; far:50;"
        fxaa=""
     >
@@ -139,79 +139,54 @@
          color="#080808">
       </a-plane>
 
-      <!-- Draw the Lightness control-column. -->
+      <!-- Draw the Wavelength control-column. -->
       <a-cylinder
-         id="tint-lightness-upper"
-         upper-lower-control="multiplier:4; offset:1"
-         position="-10 3 -8"
+         id="ripple-wavelength-upper"
+         upper-lower-control="multiplier:9000; offset:1000"
+         position="-7.5 3 -8"
          radius="0.5"
          height="2"
          mixin="grey">
       </a-cylinder>
       <a-cylinder
-         id="tint-lightness-lower"
-         upper-lower-control="multiplier:1; offset:0"
-         position="-10 1 -8"
+         id="ripple-wavelength-lower"
+         upper-lower-control="multiplier:999; offset:1"
+         position="-7.5 1 -8"
          radius="0.5"
          height="2"
          mixin="silver">
       </a-cylinder>
       <a-entity
-         bmfont-text="text:Lightness; align:center; color:#fff;"
-         position="-6.3 0.7 -3"></a-entity>
+         bmfont-text="text:Wavelength; align:center; color:#fff;"
+         position="-5.35 0.7 -3"></a-entity>
       <a-entity
-         id="tint-lightness-text"
-         bmfont-text="text:1.0; align:center; color:#fff;"
-         position="-6.3 0.5 -3"></a-entity>
+         id="ripple-wavelength-text"
+         bmfont-text="text:1000; align:center; color:#fff;"
+         position="-5.35 0.5 -3"></a-entity>
 
-      <!-- Draw the Saturation control-column. -->
+      <!-- Draw the Amplitude control-column. -->
       <a-cylinder
-         id="tint-saturation-upper"
-         upper-lower-control="multiplier:4; offset:1"
-         position="-7 3 -8"
-         radius="0.5"
-         height="2"
-         mixin="grey">
-      </a-cylinder>
-      <a-cylinder
-         id="tint-saturation-lower"
-         upper-lower-control="multiplier:1; offset:0"
-         position="-7 1 -8"
-         radius="0.5"
-         height="2"
-         mixin="silver">
-      </a-cylinder>
-      <a-entity
-         bmfont-text="text:Saturation; align:center; color:#fff;"
-         position="-5.15 0.7 -3"></a-entity>
-      <a-entity
-         id="tint-saturation-text"
-         bmfont-text="text:1.0; align:center; color:#fff;"
-         position="-5.15 0.5 -3"></a-entity>
-
-      <!-- Draw the Hue control-column. -->
-      <a-cylinder
-         id="tint-hue-upper"
-         upper-lower-control="multiplier:180; offset:180"
+         id="ripple-amplitude-upper"
+         upper-lower-control="multiplier:4.5; offset:0.5"
          position="-4.5 3 -8"
          radius="0.5"
          height="2"
          mixin="grey">
       </a-cylinder>
       <a-cylinder
-         id="tint-hue-lower"
-         upper-lower-control="multiplier:180; offset:0"
+         id="ripple-amplitude-lower"
+         upper-lower-control="multiplier:0.5; offset:0"
          position="-4.5 1 -8"
          radius="0.5"
          height="2"
          mixin="silver">
       </a-cylinder>
       <a-entity
-         bmfont-text="text:Hue; align:center; color:#fff;"
+         bmfont-text="text:Amplitude; align:center; color:#fff;"
          position="-4.2 0.7 -3"></a-entity>
       <a-entity
-         id="tint-hue-text"
-         bmfont-text="text:180; align:center; color:#fff;"
+         id="ripple-amplitude-text"
+         bmfont-text="text:0.5; align:center; color:#fff;"
          position="-4.2 0.5 -3"></a-entity>
 
     </a-scene>
