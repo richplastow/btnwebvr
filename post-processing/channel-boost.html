@@ -2,11 +2,11 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>BtnWebVR / Post-Processing / Filmic</title>
+    <title>BtnWebVR / Post-Processing / Channel Boost</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="keywords" content="VR, WebVR, GLSL, WebGL, Shaders, Filmic">
+    <meta name="keywords" content="VR, WebVR, GLSL, WebGL, Shaders, RGB, Boost">
     <meta name="description"
-      content="Example of a filmic post-processing effect in WebVR">
+      content="Example of a channel-boost post-processing effect in WebVR">
 
     <link rel="stylesheet" href="../css/btnwebvr.css">
 
@@ -35,10 +35,10 @@
     <script src="js/upper-lower-control.js"></script>
 
     <!-- Specific post-processing scripts, just for this example’s effects.  -->
-    <!-- These define `THREE.FilmShader` (used as a THREE.ShaderMaterial),   -->
-    <!-- and its accompanying component.                                     -->
-    <script src="js/filmic-shaders/FilmShader.js"></script>
-    <script src="js/filmic-components/film-grain.js"></script>
+    <!-- These define `THREE.ChannelBoostShader` (which is used as a         -->
+    <!-- THREE.ShaderMaterial), and the 'channel-boost' A-Frame component.   -->
+    <script src="js/rgb-shaders/ChannelBoostShader.js"></script>
+    <script src="js/rgb-components/channel-boost.js"></script>
 
   </head>
 
@@ -46,77 +46,73 @@
     <div class="bwv-header">
       <h1><a href="../index.html">BtnWebVR</a> /
           <a href="../post-processing.html">Post-Processing</a> /
-          Filmic
+          Channel Boost
       </h1>
-      <h2>Example of a filmic Post-Processing effect in WebVR</h2>
+      <h2>Example of a channel-boost Post-Processing effect in WebVR</h2>
     </div>
 
     <a-scene
        post-processing="true"
-       compositor="film-grain fxaa"
-       film-grain="grayscale:false; speed:0.1; nIntensity:0.7; sIntensity:0.2;"
-       fxaa=""
+       compositor="channel-boost fxaa"
+       channel-boost="rBoost:1.0; gBoost:1.0; bBoost:1.0"
        fog="type:linear; color:#222; near:1; far:50;"
+       fxaa=""
     >
 
       <!-- Mixins. -->
       <a-assets>
         <a-mixin id="grey"  material="shader:flat; color:#333"></a-mixin>
-        <a-mixin id="white" material="shader:flat; color:#fff"></a-mixin>
+        <a-mixin id="red"   material="shader:flat; color:#f00"></a-mixin>
+        <a-mixin id="green" material="shader:flat; color:#0f0"></a-mixin>
+        <a-mixin id="blue"  material="shader:flat; color:#00f"></a-mixin>
         <a-mixin id="spin"
            attribute="rotation"
            easing="linear"
            repeat="indefinite"></a-mixin>
       </a-assets>
 
-      <!-- draw an orange box, rotating on its corner -->
+      <!-- Draw an orange box, rotating on its corner. -->
       <a-entity
          geometry="primitive:box"
          position="0 2 -5"
          rotation="45 45 45"
          scale="2 2 2"
-         material="color:#ff6600; metalness:0.5; roughness:0.5; ">
+         material="color:#ff6600; metalness:0.5; roughness:0.5;">
         <a-animation
-           attribute="rotation"
            dur="60000"
            from="45 45 45"
            to="45 405 45"
-           easing="linear"
-           repeat="indefinite">
+           mixin="spin">
         </a-animation>
       </a-entity>
 
-      <!-- draw a rotating blue pyramid -->
+      <!-- Draw a rotating blue pyramid. -->
       <a-entity
          geometry="primitive:tetrahedron"
          position="-7 3 3"
          rotation="37 0 37"
          scale="3 3 3"
-         material="color:#234567; metalness:0.5; roughness:0.5; ">
+         material="color:#234567; metalness:0.5; roughness:0.5;">
         <a-animation
-           attribute="rotation"
            dur="30000"
            from="37 0 37"
            to="37 360 37"
-           easing="linear"
-           repeat="indefinite">
+           mixin="spin">
         </a-animation>
       </a-entity>
 
-      <!-- draw a rotating green torus -->
+      <!-- Draw a rotating green torus. -->
       <a-entity
          geometry="primitive:torus;"
          position="7 3 3"
          rotation="0 0 0"
          scale="2 2 2"
-         material="color:#66cc00; metalness:0.7; roughness:0.3; ">
+         material="color:#66cc00; metalness:0.7; roughness:0.3;">
         <a-animation
-           attribute="rotation"
            dur="50000"
            from="0 0 0"
            to="0 360 0"
-           easing="linear"
-           repeat="indefinite">
+           mixin="spin">
         </a-animation>
       </a-entity>
 
@@ -144,9 +140,34 @@
          color="#080808">
       </a-plane>
 
+      <!-- Draw the red-boost control-column. -->
+      <a-cylinder
+         id="channel-boost-rBoost-upper"
+         upper-lower-control
+         position="-8 3 -8"
+         radius="0.5"
+         height="2"
+         mixin="grey">
+      </a-cylinder>
+      <a-cylinder
+         id="channel-boost-rBoost-lower"
+         upper-lower-control
+         position="-8 1 -8"
+         radius="0.5"
+         height="2"
+         mixin="red">
+      </a-cylinder>
+      <a-entity
+         bmfont-text="text:Red; align:center; color:#fff;"
+         position="-5.5 0.7 -3"></a-entity>
+      <a-entity
+         id="channel-boost-rBoost-text"
+         bmfont-text="text:1.0; align:center; color:#fff;"
+         position="-5.5 0.5 -3"></a-entity>
+
       <!-- Draw the green-boost control-column. -->
       <a-cylinder
-         id="film-grain-nIntensity-upper"
+         id="channel-boost-gBoost-upper"
          upper-lower-control
          position="-6 3 -8"
          radius="0.5"
@@ -154,24 +175,24 @@
          mixin="grey">
       </a-cylinder>
       <a-cylinder
-         id="film-grain-nIntensity-lower"
+         id="channel-boost-gBoost-lower"
          upper-lower-control
          position="-6 1 -8"
          radius="0.5"
          height="2"
-         mixin="white">
+         mixin="green">
       </a-cylinder>
       <a-entity
-         bmfont-text="text:Grain; align:center; color:#fff;"
+         bmfont-text="text:Green; align:center; color:#fff;"
          position="-4.75 0.7 -3"></a-entity>
       <a-entity
-         id="film-grain-nIntensity-text"
+         id="channel-boost-gBoost-text"
          bmfont-text="text:1.0; align:center; color:#fff;"
          position="-4.75 0.5 -3"></a-entity>
 
       <!-- Draw the blue-boost control-column. -->
       <a-cylinder
-         id="film-grain-sCount-upper"
+         id="channel-boost-bBoost-upper"
          upper-lower-control
          position="-4 3 -8"
          radius="0.5"
@@ -179,18 +200,18 @@
          mixin="grey">
       </a-cylinder>
       <a-cylinder
-         id="film-grain-sCount-lower"
+         id="channel-boost-bBoost-lower"
          upper-lower-control
          position="-4 1 -8"
          radius="0.5"
          height="2"
-         mixin="white">
+         mixin="blue">
       </a-cylinder>
       <a-entity
-         bmfont-text="text:Lines; align:center; color:#fff;"
+         bmfont-text="text:Blue; align:center; color:#fff;"
          position="-4 0.7 -3"></a-entity>
       <a-entity
-         id="film-grain-sCount-text"
+         id="channel-boost-bBoost-text"
          bmfont-text="text:1.0; align:center; color:#fff;"
          position="-4 0.5 -3"></a-entity>
 
