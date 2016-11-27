@@ -2,11 +2,11 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>BtnWebVR / Post-Processing / Filmic</title>
+    <title>BtnWebVR / Post-Processing / Tint</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="keywords" content="VR, WebVR, GLSL, WebGL, Shaders, Filmic">
+    <meta name="keywords" content="VR, WebVR, GLSL, WebGL, Shaders, RGB, Tint">
     <meta name="description"
-      content="Example of a filmic post-processing effect in WebVR">
+      content="Example of a tint post-processing effect in WebVR">
 
     <link rel="stylesheet" href="../css/btnwebvr.css">
 
@@ -31,14 +31,14 @@
     <!-- The 'upper-lower-control' A-Frame component provides mouseenter and -->
     <!-- mouseleave listeners for control-columns. It modifies the control   -->
     <!-- heights, and applies the value to a post-processing effect.         -->
-    <!-- See `#channel-boost-rBoost-upper` etc, below.                       -->
+    <!-- See `#tint-rTint-upper` etc, below.                                 -->
     <script src="js/upper-lower-control.js"></script>
 
     <!-- Specific post-processing scripts, just for this example’s effects.  -->
-    <!-- These define `THREE.FilmShader` (used as a THREE.ShaderMaterial),   -->
-    <!-- and its accompanying component.                                     -->
-    <script src="js/filmic-shaders/FilmShader.js"></script>
-    <script src="js/filmic-components/film-grain.js"></script>
+    <!-- These define `THREE.ChannelBoostShader` and the 'tint' A-Frame      -->
+    <!-- component.                                                          -->
+    <script src="js/rgb-shaders/ChannelBoostShader.js"></script>
+    <script src="js/rgb-components/tint.js"></script>
 
   </head>
 
@@ -46,17 +46,17 @@
     <div class="bwv-header">
       <h1><a href="../index.html">BtnWebVR</a> /
           <a href="../post-processing.html">Post-Processing</a> /
-          Filmic
+          Tint
       </h1>
-      <h2>Example of a filmic Post-Processing effect in WebVR</h2>
+      <h2>Example of a tint Post-Processing effect in WebVR</h2>
     </div>
 
     <a-scene
        post-processing="true"
-       compositor="film-grain fxaa"
-       film-grain="grayscale:false; speed:0.1; sIntensity:0.2; sCount:100; nIntensity:0.5; "
-       fxaa=""
+       compositor="tint fxaa"
+       tint="hue:180; saturation:1.0; lightness:1.0"
        fog="type:linear; color:#222; near:1; far:50;"
+       fxaa=""
     >
 
       <!-- Mixins. -->
@@ -70,54 +70,48 @@
            repeat="indefinite"></a-mixin>
       </a-assets>
 
-      <!-- draw an orange box, rotating on its corner -->
+      <!-- Draw an orange box, rotating on its corner. -->
       <a-entity
          geometry="primitive:box"
          position="0 2 -5"
          rotation="45 45 45"
          scale="2 2 2"
-         material="color:#ff6600; metalness:0.5; roughness:0.5; ">
+         material="color:#ff6600; metalness:0.5; roughness:0.5;">
         <a-animation
-           attribute="rotation"
            dur="60000"
            from="45 45 45"
            to="45 405 45"
-           easing="linear"
-           repeat="indefinite">
+           mixin="spin">
         </a-animation>
       </a-entity>
 
-      <!-- draw a rotating blue pyramid -->
+      <!-- Draw a rotating blue pyramid. -->
       <a-entity
          geometry="primitive:tetrahedron"
          position="-7 3 3"
          rotation="37 0 37"
          scale="3 3 3"
-         material="color:#234567; metalness:0.5; roughness:0.5; ">
+         material="color:#234567; metalness:0.5; roughness:0.5;">
         <a-animation
-           attribute="rotation"
            dur="30000"
            from="37 0 37"
            to="37 360 37"
-           easing="linear"
-           repeat="indefinite">
+           mixin="spin">
         </a-animation>
       </a-entity>
 
-      <!-- draw a rotating green torus -->
+      <!-- Draw a rotating green torus. -->
       <a-entity
          geometry="primitive:torus;"
          position="7 3 3"
          rotation="0 0 0"
          scale="2 2 2"
-         material="color:#66cc00; metalness:0.7; roughness:0.3; ">
+         material="color:#66cc00; metalness:0.7; roughness:0.3;">
         <a-animation
-           attribute="rotation"
            dur="50000"
            from="0 0 0"
            to="0 360 0"
-           easing="linear"
-           repeat="indefinite">
+           mixin="spin">
         </a-animation>
       </a-entity>
 
@@ -145,80 +139,80 @@
          color="#080808">
       </a-plane>
 
-      <!-- Draw the Line Level control-column. -->
+      <!-- Draw the Lightness control-column. -->
       <a-cylinder
-         id="film-grain-sIntensity-upper"
-         upper-lower-control="multiplier:0.8; offset:0.2"
+         id="tint-lightness-upper"
+         upper-lower-control="multiplier:4; offset:1"
          position="-10 3 -8"
          radius="0.5"
          height="2"
          mixin="grey">
       </a-cylinder>
       <a-cylinder
-         id="film-grain-sIntensity-lower"
-         upper-lower-control="multiplier:0.2; offset:0"
+         id="tint-lightness-lower"
+         upper-lower-control="multiplier:1; offset:0"
          position="-10 1 -8"
          radius="0.5"
          height="2"
          mixin="silver">
       </a-cylinder>
       <a-entity
-         bmfont-text="text:Line Level; align:center; color:#fff;"
+         bmfont-text="text:Lightness; align:center; color:#fff;"
          position="-6.3 0.7 -3"></a-entity>
       <a-entity
-         id="film-grain-sIntensity-text"
-         bmfont-text="text:0.20; align:center; color:#fff;"
+         id="tint-lightness-text"
+         bmfont-text="text:1.0; align:center; color:#fff;"
          position="-6.3 0.5 -3"></a-entity>
 
-      <!-- Draw the Line Count control-column. -->
+      <!-- Draw the Saturation control-column. -->
       <a-cylinder
-         id="film-grain-sCount-upper"
-         upper-lower-control="multiplier:900; offset:100"
+         id="tint-saturation-upper"
+         upper-lower-control="multiplier:4; offset:1"
          position="-7 3 -8"
          radius="0.5"
          height="2"
          mixin="grey">
       </a-cylinder>
       <a-cylinder
-         id="film-grain-sCount-lower"
-         upper-lower-control="multiplier:100; offset:0"
+         id="tint-saturation-lower"
+         upper-lower-control="multiplier:1; offset:0"
          position="-7 1 -8"
          radius="0.5"
          height="2"
          mixin="silver">
       </a-cylinder>
       <a-entity
-         bmfont-text="text:Line Count; align:center; color:#fff;"
-         position="-5.2 0.7 -3"></a-entity>
+         bmfont-text="text:Saturation; align:center; color:#fff;"
+         position="-5.15 0.7 -3"></a-entity>
       <a-entity
-         id="film-grain-sCount-text"
-         bmfont-text="text:100; align:center; color:#fff;"
-         position="-5.2 0.5 -3"></a-entity>
+         id="tint-saturation-text"
+         bmfont-text="text:1.0; align:center; color:#fff;"
+         position="-5.15 0.5 -3"></a-entity>
 
-      <!-- Draw the Noise control-column. -->
+      <!-- Draw the Hue control-column. -->
       <a-cylinder
-         id="film-grain-nIntensity-upper"
-         upper-lower-control="multiplier:0.5; offset:0.5"
-         position="-4.75 3 -8"
+         id="tint-hue-upper"
+         upper-lower-control="multiplier:180; offset:180"
+         position="-4.5 3 -8"
          radius="0.5"
          height="2"
          mixin="grey">
       </a-cylinder>
       <a-cylinder
-         id="film-grain-nIntensity-lower"
-         upper-lower-control="multiplier:0.5; offset:0"
-         position="-4.75 1 -8"
+         id="tint-hue-lower"
+         upper-lower-control="multiplier:180; offset:0"
+         position="-4.5 1 -8"
          radius="0.5"
          height="2"
          mixin="silver">
       </a-cylinder>
       <a-entity
-         bmfont-text="text:Noise; align:center; color:#fff;"
-         position="-4.25 0.7 -3"></a-entity>
+         bmfont-text="text:Hue; align:center; color:#fff;"
+         position="-4.2 0.7 -3"></a-entity>
       <a-entity
-         id="film-grain-nIntensity-text"
-         bmfont-text="text:0.50; align:center; color:#fff;"
-         position="-4.25 0.5 -3"></a-entity>
+         id="tint-hue-text"
+         bmfont-text="text:180; align:center; color:#fff;"
+         position="-4.2 0.5 -3"></a-entity>
 
     </a-scene>
 

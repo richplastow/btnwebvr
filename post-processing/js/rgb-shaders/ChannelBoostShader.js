@@ -35,7 +35,6 @@ THREE.ChannelBoostShader = {
 		"void main() {",
 
 			"vec4 tex = texture2D( tDiffuse, vec2(vUv.x, vUv.y) );",
-			// "vec4 newTex = vec4(tex.r, (tex.g + tex.b) * 0.001, (tex.g + tex.b) * 0.999, 0.001);",
 			"vec4 newTex = vec4(tex.r*rBoost, tex.g*gBoost, tex.b*bBoost, 1.0);",
 
 			"gl_FragColor = newTex;",

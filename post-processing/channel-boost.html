@@ -61,10 +61,13 @@
 
       <!-- Mixins. -->
       <a-assets>
-        <a-mixin id="grey"  material="shader:flat; color:#333"></a-mixin>
-        <a-mixin id="red"   material="shader:flat; color:#f00"></a-mixin>
-        <a-mixin id="green" material="shader:flat; color:#0f0"></a-mixin>
-        <a-mixin id="blue"  material="shader:flat; color:#00f"></a-mixin>
+        <a-mixin id="grey"   material="shader:flat; color:#333"></a-mixin>
+        <a-mixin id="silver" material="shader:flat; color:#aaa"></a-mixin>
+        <a-mixin id="white"  material="shader:flat; color:#aaa"></a-mixin>
+        <a-mixin id="grey"   material="shader:flat; color:#333"></a-mixin>
+        <a-mixin id="red"    material="shader:flat; color:#f00"></a-mixin>
+        <a-mixin id="green"  material="shader:flat; color:#0f0"></a-mixin>
+        <a-mixin id="blue"   material="shader:flat; color:#00f"></a-mixin>
         <a-mixin id="spin"
            attribute="rotation"
            easing="linear"
@@ -143,7 +146,7 @@
       <!-- Draw the red-boost control-column. -->
       <a-cylinder
          id="channel-boost-rBoost-upper"
-         upper-lower-control
+         upper-lower-control="multiplier:10; offset:1"
          position="-8 3 -8"
          radius="0.5"
          height="2"
@@ -151,7 +154,7 @@
       </a-cylinder>
       <a-cylinder
          id="channel-boost-rBoost-lower"
-         upper-lower-control
+         upper-lower-control="multiplier:1; offset:0"
          position="-8 1 -8"
          radius="0.5"
          height="2"
@@ -168,7 +171,7 @@
       <!-- Draw the green-boost control-column. -->
       <a-cylinder
          id="channel-boost-gBoost-upper"
-         upper-lower-control
+         upper-lower-control="multiplier:10; offset:1"
          position="-6 3 -8"
          radius="0.5"
          height="2"
@@ -176,7 +179,7 @@
       </a-cylinder>
       <a-cylinder
          id="channel-boost-gBoost-lower"
-         upper-lower-control
+         upper-lower-control="multiplier:1; offset:0"
          position="-6 1 -8"
          radius="0.5"
          height="2"
@@ -193,7 +196,7 @@
       <!-- Draw the blue-boost control-column. -->
       <a-cylinder
          id="channel-boost-bBoost-upper"
-         upper-lower-control
+         upper-lower-control="multiplier:10; offset:1"
          position="-4 3 -8"
          radius="0.5"
          height="2"
@@ -201,7 +204,7 @@
       </a-cylinder>
       <a-cylinder
          id="channel-boost-bBoost-lower"
-         upper-lower-control
+         upper-lower-control="multiplier:1; offset:0"
          position="-4 1 -8"
          radius="0.5"
          height="2"

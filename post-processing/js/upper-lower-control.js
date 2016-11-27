@@ -13,7 +13,7 @@
     , $lower = null    // the bottom element of the current control-column
     , $text = null     // the 'bmfont-text' element, showing the current value
     , value = null     // derived from the current control-column’s height
-    , valueStr = null  // the current value converted to two significant figures
+    , displayValue     // the current value converted to 3 significant figures
     , thin = 0         // used to limit the number of times `$text` is changed
     , velocity = 0.001 // speed at which the control-column changes height
     , isReducing       // true if the cursor is currently over the lower element
@@ -22,9 +22,18 @@
     , upperOrLower     // a string, either 'upper' or 'lower'
     , key              // eg 'rBoost' to change the red of a channel-boost
     , effect           // eg 'channel-boost'
+    , upperMultiplier  // `$upper`’s 'multiplier' parameter
+    , lowerMultiplier  // `$lower`’s 'multiplier' parameter
+    , upperOffset      // `$upper`’s 'offset' parameter
+    , lowerOffset      // `$lower`’s 'offset' parameter
   ;
 
   AFRAME.registerComponent('upper-lower-control', {
+
+    schema: {
+      multiplier: { default: 1.0 },
+      offset:     { default: 0.0 },
+    },
 
     init: function () {
       $scene = document.querySelector('a-scene');
@@ -57,6 +66,20 @@
         } else {
           console.warn("Unexpected 'upper-lower-control' id: " + id);
         }
+
+        //// Get the control-column range.
+        var upperData = $upper.getAttribute('upper-lower-control');
+        var lowerData = $lower.getAttribute('upper-lower-control');
+        upperMultiplier = +upperData.multiplier;
+        lowerMultiplier = +lowerData.multiplier;
+        upperOffset     = +upperData.offset;
+        lowerOffset     = +lowerData.offset;
+        // var most  = +upperRange.to;
+        // var mid   = +upperRange.from;
+        // var least = +lowerRange.from;
+        // if (lowerRange.to !== mid) { console.warn('lower control range `to` ' +
+        //   lowerRange.to + ' !== upper control range `from` ' + mid);
+        // }
 
       });
       this.el.addEventListener('mouseleave', reset);
@@ -91,12 +114,18 @@
     $lower.setAttribute('position', pos.x+' '+( lowerHeight/2 )+' '+pos.z);
 
     //// Convert the height of the lower element to a value.
-    if (2 < lowerHeight) { // 2.001 to 3.5
-      value = (lowerHeight-2) * 6 + 1; // 1.006 to 10
-    } else if (2 > lowerHeight) { // 0.5 to 1.999
-      value = (lowerHeight-0.4) / 1.6; // 0.0625 to 0.999375
+    if (3.4 < lowerHeight) { // 3.499 to 3.5
+      value = upperMultiplier + upperOffset;
+    } else if (0.6 > lowerHeight) { // 0.5 to 0.599
+      value = lowerOffset;
+    } else if (2 < lowerHeight) { // 2.001 to 3.4
+      value = (lowerHeight-2) / 1.5; // 0.000667 to 0.9333
+      value = value * upperMultiplier + upperOffset;
+    } else if (2 > lowerHeight) { // 0.6 to 1.999
+      value = (lowerHeight-0.5) / 1.5; // 0.0667 to 0.999333
+      value = value * lowerMultiplier + lowerOffset;
     } else { // 2
-      value = 1.0;
+      value = upperOffset; // 0 * upperMultiplier + upperOffset
     }
     $scene.setAttribute(effect, key, value);
 
@@ -114,8 +143,8 @@
 
   //// Called when the cursor leaves a control-column element.
   function reset () {
-    if ($upper && null !== value) updateText(value);
-    $upper = $lower = $text = value = valueStr = null;
+    if ($upper) updateText(value);
+    $upper = $lower = $text = valueStr = null;
     velocity = 0.001;
     thin = 0;
   }
@@ -123,17 +152,25 @@
 
   //// Called by `tick()` and `reset()`
   function updateText (value) {
-    var newValueStr;
-    if (~~value === value) { // is an integer
-      newValueStr = (value + '.0').substr(0,3);
-    } else if (1 > value) {
-      newValueStr = (value + '00').substr(0,4);
+    var newValue;
+    if (1000 <= value) {
+      newValue = ''+Math.floor(value);
     } else {
-      newValueStr = (value + '0').substr(0,3);
+      newValue = value.toPrecision(3);
     }
-    if (valueStr !== newValueStr) {
-      valueStr = newValueStr;
-      $text.setAttribute('bmfont-text', 'text', valueStr);
+    if ( -1 !== newValue.indexOf('e') ) newValue = parseFloat(newValue);
+    if (99 < newValue && 101 > newValue) {
+      newValue = 100;
+    } else if (9.9 < newValue && 10.1 > newValue) {
+      newValue = '10.0';
+    } else if (0.99 < newValue && 1.1 > newValue) {
+      newValue = '1.00';
+    } else if (0.001 > newValue) {
+      newValue = '0.00';
+    }
+    if (displayValue !== newValue) {
+      displayValue = newValue;
+      $text.setAttribute('bmfont-text', 'text', displayValue);
     }
   }
 
