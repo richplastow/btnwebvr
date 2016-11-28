@@ -20,11 +20,6 @@
     <!-- ... /tree/gh-pages/examples/test/post-processing/components         -->
     <script src="js/compositor.js"></script>
 
-    <!-- The 'fxaa' A-Frame component provides fast anti-aliasing.           -->
-    <!-- Background info here: kotaku.com.au/2011/12/what-is-fxaa/           -->
-    <script src="js/utility-components/fxaa.js"></script>
-    <script src="js/utility-shaders/FXAAShader.js"></script>
-
     <!-- The 'bmfont-text' A-Frame component lets us add text to the scene.  -->
     <script src="js/utility-components/bmfont-text.min.js"></script>
 
@@ -53,10 +48,9 @@
 
     <a-scene
        post-processing="true"
-       compositor="tint fxaa"
+       compositor="tint"
        tint="hue:180; saturation:1.0; lightness:1.0"
        fog="type:linear; color:#222; near:1; far:50;"
-       fxaa
     >
 
       <!-- Mixins. -->
