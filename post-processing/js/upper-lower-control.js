@@ -165,8 +165,10 @@
       newValue = '10.0';
     } else if (0.99 < newValue && 1.1 > newValue) {
       newValue = '1.00';
-    } else if (0.001 > newValue) {
-      newValue = '0.00';
+    } else if (0.099 < newValue && 0.11 > newValue) {
+      newValue = '0.10';
+    } else if (0.0099 < newValue && 0.011 > newValue) {
+      newValue = '0.01';
     }
     if (displayValue !== newValue) {
       displayValue = newValue;

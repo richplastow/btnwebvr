@@ -1,40 +1,40 @@
 THREE.RippleShader = {
 
-	uniforms: {
+  uniforms: {
 
-		tDiffuse:    { value: null },
+    tDiffuse:    { value: null },
     wavelength:  { default: 1000.0 },
     amplitude:   { default: 0.5 },
     iGlobalTime: { default: 0.0 },
 
-	},
+  },
 
-	vertexShader: [
+  vertexShader: [
 
-		"varying vec2 vUv;",
+    "varying vec2 vUv;",
 
-		"void main() {",
+    "void main() {",
 
-			"vUv = uv;",
-			"gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);",
+      "vUv = uv;",
+      "gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);",
 
-		"}"
+    "}"
 
-	].join( "\n" ),
+  ].join( "\n" ),
 
 
-	fragmentShader: [
+  fragmentShader: [
 
-		"uniform sampler2D tDiffuse;",
+    "uniform sampler2D tDiffuse;",
 
-		//// Component parameters, eg 'ripple="level:0.8;"'
-		"uniform float wavelength;",
-		"uniform float amplitude;",
+    //// Component parameters, eg 'ripple="amplitude:0.8;"'
+    "uniform float wavelength;",
+    "uniform float amplitude;",
 
-		//// Passed in by `tock()`.
-		"uniform float iGlobalTime;",
+    //// Passed in by `tock()`.
+    "uniform float iGlobalTime;",
 
-		"varying vec2 vUv;",
+    "varying vec2 vUv;",
 
     //// From www.shadertoy.com/view/4djGzz
     '// MTAT.03.015 Computer Graphics',
@@ -46,10 +46,9 @@ THREE.RippleShader = {
     '// Simple circular wave function',
     'float wave(vec2 pos, float t, float freq, float numWaves, vec2 center) {',
 
-    '	float d = length(pos - center);',
-    '	d = log(1.0 + exp(d));',
-    '	return 1.0/(1.0+20.0*d*d) *',
-    '		   sin(2.0*3.1415*(-numWaves*d + t*freq));',
+    '  float d = length(pos - center);',
+    '  d = log(1.0 + exp(d));',
+    '  return 1.0/(1.0+20.0*d*d) * sin(2.0*3.1415*(-numWaves*d + t*freq));',
 
     '}',
 
@@ -57,10 +56,10 @@ THREE.RippleShader = {
     '// This height map combines a couple of waves',
     'float height(vec2 pos, float t) {',
 
-    '	float w;',
-    '	w =  wave(pos, t, 1.0/wavelength, amplitude, vec2(0.5, -0.5));',
-    '	w += wave(pos, t, 1.0/wavelength, amplitude, -vec2(0.5, -0.5));',
-    '	return w;',
+    '  float w;',
+    '  w =  wave(pos, t, 1.0/wavelength, amplitude, vec2(0.5, -0.5));',
+    '  w += wave(pos, t, 1.0/wavelength, amplitude, -vec2(0.5, -0.5));',
+    '  return w;',
 
     '}',
 
@@ -68,8 +67,8 @@ THREE.RippleShader = {
     '// Discrete differentiation',
     'vec2 normal(vec2 pos, float t) {',
 
-    '	return 	vec2(height(pos - vec2(0.01, 0), t) - height(pos, t), ',
-    '				 height(pos - vec2(0, 0.01), t) - height(pos, t));',
+    '  return vec2(height(pos - vec2(0.01, 0), t) - height(pos, t), ',
+    '    height(pos - vec2(0, 0.01), t) - height(pos, t));',
 
     '}',
 
@@ -77,20 +76,23 @@ THREE.RippleShader = {
     '// Simple ripple effect',
     'void mainImage( out vec4 fragColor, in vec2 fragCoord ) {',
 
-    // The following line was: '	vec2 uv = fragCoord.xy / iResolution.xy;',
-    '	vec2 uv = vUv;',
-    '	vec2 uvn = 2.0*uv - vec2(1.0);	',
-    '	uv += normal(uvn, iGlobalTime);',
-    '	fragColor = texture2D( tDiffuse, vec2(uv.x, uv.y) );',
+    //// The following line was: 'vec2 uv = fragCoord.xy / iResolution.xy;'
+    '  vec2 uv = vUv;',
+
+    '  vec2 uvn = 2.0*uv - vec2(1.0);  ',
+    '  uv += normal(uvn, iGlobalTime);',
+
+    //// This was 'fragColor = texture2D(iChannel0, vec2(1.0-uv.x, uv.y));'
+    '  fragColor = texture2D( tDiffuse, vec2(uv.x, uv.y) );',
 
     '}',
 
 
-		"void main() {",
+    "void main() {",
 
-			"mainImage( gl_FragColor, vUv );",
+      "mainImage( gl_FragColor, vUv );",
 
-		"}"
-	].join( "\n" )
+    "}"
+  ].join( "\n" )
 
 };
