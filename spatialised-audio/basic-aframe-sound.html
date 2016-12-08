@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>BtnWebVR / Spatialised Audio / Basic A-Frame &lt;a-sound&gt;</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="VR, WebVR, Web Audio, Spatialised, Basic">
+    <meta name="description"
+      content="Basic example of spatialised audio using A-Frame">
+
+    <link rel="stylesheet" href="../css/btnwebvr.css">
+
+    <!-- Minified A-Frame 0.3.2                                              -->
+    <!-- From github.com/aframevr/aframe/tree/master/dist                    -->
+    <script src="js/aframe.min.js"></script>
+
+  </head>
+
+  <body>
+    <div class="bwv-header">
+      <h1><a href="../index.html">BtnWebVR</a> /
+          <a href="../spatialised-audio.html">Spatialised Audio</a> /
+          Basic A-Frame <tt>&lt;a-sound&gt;</tt>
+      </h1>
+      <h2>Basic example of spatialised audio using A-Frame</h2>
+      <h6>All audio
+        <a href="https://creativecommons.org/licenses/by-nc/3.0/">CC</a>
+        <a href="http://www.setuniman.com/">Setuniman</a> at
+        <a href="https://www.freesound.org/people/Setuniman/">Freesound</a>
+    </div>
+
+    <a-scene
+       fog="type:linear; color:#222; near:1; far:50;"
+    >
+
+      <!-- Mixins. -->
+      <a-assets>
+        <a-mixin id="spin"
+           attribute="rotation"
+           easing="linear"
+           repeat="indefinite"></a-mixin>
+        <audio id="seventies" src="audio/369718-setuniman-in-the-seventies.mp3">
+      </a-assets>
+
+      <!-- Draw an orange box, rotating on its corner. -->
+      <a-entity
+         geometry="primitive:box"
+         position="0 2 -5"
+         rotation="45 45 45"
+         scale="2 2 2"
+         material="color:#ff6600; metalness:0.5; roughness:0.5;">
+        <a-animation
+           dur="60000"
+           from="45 45 45"
+           to="45 405 45"
+           mixin="spin">
+        </a-animation>
+        <a-sound src="#seventies" autoplay="true" loop="true"></a-sound>
+      </a-entity>
+
+      <!-- Draw a rotating blue pyramid. -->
+      <a-entity
+         geometry="primitive:tetrahedron"
+         position="-7 3 3"
+         rotation="37 0 37"
+         scale="3 3 3"
+         material="color:#234567; metalness:0.5; roughness:0.5;">
+        <a-animation
+           dur="30000"
+           from="37 0 37"
+           to="37 360 37"
+           mixin="spin">
+        </a-animation>
+      </a-entity>
+
+      <!-- Draw a rotating green torus. -->
+      <a-entity
+         geometry="primitive:torus;"
+         position="7 3 3"
+         rotation="0 0 0"
+         scale="2 2 2"
+         material="color:#66cc00; metalness:0.7; roughness:0.3;">
+        <a-animation
+           dur="50000"
+           from="0 0 0"
+           to="0 360 0"
+           mixin="spin">
+        </a-animation>
+      </a-entity>
+
+      <!-- Add a camera and cursor. -->
+      <a-camera look-controls>
+        <a-entity
+           cursor="fuse:false;"
+           position="0 0 -1"
+           scale="0.02 0.02 0.02"
+           geometry="primitive: ring"
+           material="color:white; shader:flat">
+        </a-entity>
+      </a-camera>
+
+      <!-- Draw the environment. -->
+      <a-sky
+         upper-lower-control
+         color="#222">
+      </a-sky>
+      <a-plane
+         upper-lower-control
+         height="100"
+         width="100"
+         rotation="-90 0 0"
+         color="#080808">
+      </a-plane>
+
+    </a-scene>
+
+  </body>
+</html>
